@@ -19,7 +19,7 @@ class City extends Equatable {
       ];
 }
 
-const cities = [
+final cities = List<City>.unmodifiable(const [
   City(
     name: "Lagos",
     latitude: 6.4550,
@@ -95,4 +95,4 @@ const cities = [
     latitude: 7.7667,
     longitude: 4.5667,
   ),
-];
+]);

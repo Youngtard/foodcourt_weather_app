@@ -34,7 +34,7 @@ class CarouselItem extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "city.name",
+            title,
             style: textTheme.headlineLarge!.copyWith(
               color: Colors.white,
               fontWeight: FontWeight.w400,

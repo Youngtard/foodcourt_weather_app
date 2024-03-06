@@ -32,9 +32,10 @@ class _MainScreenState extends State<MainScreen> {
       appBar: AppBar(
         title: Text(
           "FoodCourt Weather",
-          style: textTheme.headlineMedium,
+          style: textTheme.headlineLarge,
         ),
         centerTitle: true,
+        automaticallyImplyLeading: false,
       ),
       body: SafeArea(
         child: Padding(
