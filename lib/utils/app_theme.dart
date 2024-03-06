@@ -4,6 +4,11 @@ import 'app_colors.dart';
 
 class AppTheme {
   static const TextTheme _lightTextTheme = TextTheme(
+    headlineLarge: TextStyle(
+      fontSize: 24,
+      color: kNeutral900,
+      fontWeight: FontWeight.w600,
+    ),
     headlineMedium: TextStyle(
       fontSize: 16,
       color: kNeutral900,
@@ -12,7 +17,7 @@ class AppTheme {
     bodyLarge: TextStyle(
       fontSize: 16,
       color: kNeutral900,
-      fontWeight: FontWeight.w400,
+      fontWeight: FontWeight.w500,
     ),
     bodyMedium: TextStyle(
       fontSize: 14,
@@ -38,41 +43,6 @@ class AppTheme {
       ),
       primaryColor: kPrimaryColor,
       textTheme: _lightTextTheme,
-      // textSelectionTheme: const TextSelectionThemeData(
-      //   cursorColor: kPrimaryColor,
-      // ),
-      // inputDecorationTheme: InputDecorationTheme(
-      //   isDense: false,
-      //   border: OutlineInputBorder(
-      //     borderRadius: BorderRadius.circular(8.0),
-      //     borderSide: const BorderSide(
-      //       color: kNeutral100,
-      //     ),
-      //   ),
-      //   enabledBorder: OutlineInputBorder(
-      //     borderRadius: BorderRadius.circular(8.0),
-      //     borderSide: const BorderSide(
-      //       color: kNeutral100,
-      //     ),
-      //   ),
-      //   focusedBorder: OutlineInputBorder(
-      //     borderRadius: BorderRadius.circular(8.0),
-      //     borderSide: const BorderSide(
-      //       color: kPrimaryColor,
-      //     ),
-      //   ),
-      //   disabledBorder: OutlineInputBorder(
-      //     borderRadius: BorderRadius.circular(8.0),
-      //     borderSide: const BorderSide(
-      //       color: kNeutral50,
-      //     ),
-      //   ),
-      //   focusedErrorBorder: OutlineInputBorder(
-      //     borderRadius: BorderRadius.circular(8),
-      //     borderSide: const BorderSide(color: kError500Color, width: 1.0),
-      //   ),
-      //   focusColor: kPrimaryColor,
-      // ),
     );
   }
 }

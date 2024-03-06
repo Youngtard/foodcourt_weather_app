@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foodcourt_weather/utils/app_theme.dart';
 import 'package:foodcourt_weather/utils/utils.dart';
-import 'package:foodcourt_weather/weather/screens/main_screen.dart';
+import 'package:foodcourt_weather/weather/presentation/screens/main_screen.dart';
 
 void main() {
   runApp(const MyApp());
