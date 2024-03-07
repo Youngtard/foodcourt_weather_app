@@ -61,18 +61,12 @@ class _SelectCitiesScreenState extends State<SelectCitiesScreen> {
                         const SizedBox(
                           height: 8,
                         ),
-                        Visibility(
-                          // visible: _selectedCities.length != _limit,
-                          maintainSize: true,
-                          maintainAnimation: true,
-                          maintainState: true,
-                          child: Text(
-                            _selectedCities.length != _limit
-                                ? "Kindly select ${_getCitiesLeft()} more ${_getCitiesLeft() == 1 ? "city" : "cities"} to proceed"
-                                : _selectedCities.map((e) => e.name).join(", "),
-                            style: textTheme.bodyLarge!.copyWith(
-                              fontWeight: FontWeight.w400,
-                            ),
+                        Text(
+                          _selectedCities.length != _limit
+                              ? "Kindly select ${_getCitiesLeft()} more ${_getCitiesLeft() == 1 ? "city" : "cities"} to proceed"
+                              : _selectedCities.map((e) => e.name).join(", "),
+                          style: textTheme.bodyLarge!.copyWith(
+                            fontWeight: FontWeight.w400,
                           ),
                         ),
                         const SizedBox(

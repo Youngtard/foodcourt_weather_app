@@ -7,3 +7,4 @@ const kError500Color = Color(0xffEF4444);
 const kPrimaryColor = Color(0xff4374E0);
 const kOrangeColor = Color(0xffF59E0B);
 const kRedColor = Color(0xffEF4444);
+const kGreyColor = Color(0xffEBECEF);
