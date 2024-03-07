@@ -1,30 +1,63 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:foodcourt_weather/utils/app_colors.dart';
 import 'package:foodcourt_weather/utils/utils.dart';
+import 'package:foodcourt_weather/weather/data/repository/local_cities_repository.dart';
 import 'package:foodcourt_weather/weather/domain/models/city.dart';
 import 'package:foodcourt_weather/weather/presentation/screens/components/carousel_item.dart';
 
-class MainScreen extends StatefulWidget {
+class MainScreen extends ConsumerStatefulWidget {
   const MainScreen({super.key});
 
   @override
-  State<MainScreen> createState() => _MainScreenState();
+  ConsumerState<MainScreen> createState() => _MainScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> {
-  final _sliders = cities
-      .take(3)
-      .mapIndexed(
-        (index, city) => CarouselItem(
-          index: index,
-          title: city.name,
-          degree: "34°",
-          description: "Mostly cloudy",
-        ),
-      )
-      .toList();
+class _MainScreenState extends ConsumerState<MainScreen> {
+  late final LocalCitiesRepository _localCitiesProvider;
+
+  late List<City> _selectedCities;
+  late List<CarouselItem> _sliders;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _localCitiesProvider = ref.read(localCitiesRepositoryProvider);
+
+    _selectedCities = _localCitiesProvider.getCities() ?? [];
+    _sliders = _getSliders();
+  }
+
+  int _determineSliderColorIndex(int index) {
+    index = index + 1;
+
+    if (index % 3 == 1) {
+      return 0;
+    } else if (index % 3 == 2) {
+      return 1;
+    } else {
+      return 2;
+    }
+  }
+
+  final _colors = [kBlueColor, kOrangeColor, kRedColor];
+
+  List<CarouselItem> _getSliders() {
+    return _selectedCities
+        .mapIndexed(
+          (index, city) => CarouselItem(
+            index: index,
+            title: city.name,
+            degree: "34°",
+            description: "Mostly cloudy",
+            bgColor: _colors[_determineSliderColorIndex(index)],
+          ),
+        )
+        .toList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -105,6 +138,8 @@ class _MainScreenState extends State<MainScreen> {
                   itemBuilder: (context, index) {
                     final city = cities[index];
 
+                    final isSelected = _selectedCities.contains(city);
+
                     return ListTile(
                       leading: Icon(
                         Icons.location_city_rounded,
@@ -113,10 +148,31 @@ class _MainScreenState extends State<MainScreen> {
                       title: Text(
                         city.name,
                       ),
-                      trailing: Text(
-                        "Selected",
-                        style: textTheme.bodySmall,
-                      ),
+                      trailing: city.name == "Lagos"
+                          ? null
+                          : InkWell(
+                              onTap: () async {
+                                if (isSelected) {
+                                  _selectedCities.remove(city);
+                                } else {
+                                  _selectedCities.add(city);
+                                }
+
+                                await _localCitiesProvider.persistCities(_selectedCities);
+
+                                _selectedCities = _localCitiesProvider.getCities() ?? [];
+                                _sliders = _getSliders();
+
+                                setState(() {});
+                              },
+                              child: Text(
+                                isSelected ? "Unselect" : "Select",
+                                style: textTheme.bodySmall!.copyWith(
+                                  color: isSelected ? kNeutral900 : kBlueColor,
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
+                            ),
                     );
                   },
                 ),

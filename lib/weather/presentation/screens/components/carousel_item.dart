@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../../utils/app_colors.dart';
 import '../../../../utils/utils.dart';
 
 class CarouselItem extends StatelessWidget {
@@ -10,10 +9,12 @@ class CarouselItem extends StatelessWidget {
     required this.title,
     required this.degree,
     required this.description,
+    required this.bgColor,
   });
 
   final int index;
   final String title, degree, description;
+  final Color bgColor;
 
   @override
   Widget build(BuildContext context) {
@@ -21,13 +22,7 @@ class CarouselItem extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: index == 0
-            ? kBlueColor
-            : index == 1
-                ? kOrangeColor
-                : index == 2
-                    ? kRedColor
-                    : null,
+        color: bgColor,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(

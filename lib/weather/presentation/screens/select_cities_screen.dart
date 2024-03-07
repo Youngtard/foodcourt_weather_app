@@ -1,7 +1,9 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:foodcourt_weather/utils/app_colors.dart';
 import 'package:foodcourt_weather/utils/utils.dart';
+import 'package:foodcourt_weather/weather/data/repository/local_cities_repository.dart';
 import 'package:foodcourt_weather/weather/domain/models/city.dart';
 import 'package:foodcourt_weather/weather/presentation/screens/main_screen.dart';
 
@@ -143,27 +145,45 @@ class _SelectCitiesScreenState extends State<SelectCitiesScreen> {
               const SizedBox(
                 height: 24,
               ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(double.infinity, 48),
-                  backgroundColor: _enableButton() ? kBlueColor : kBlueColor.withOpacity(0.6),
-                ),
-                onPressed: () {
-                  if (_enableButton()) {
-                    Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(
-                        builder: (context) => const MainScreen(),
+              Consumer(
+                builder: (context, ref, _) {
+                  final localCitiesProvider = ref.read(localCitiesRepositoryProvider);
+
+                  return ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(double.infinity, 48),
+                      backgroundColor: _enableButton() ? kBlueColor : kBlueColor.withOpacity(0.6),
+                    ),
+                    onPressed: () async {
+                      if (_enableButton()) {
+                        try {
+                          await localCitiesProvider.persistCities(_selectedCities);
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                e.toString(),
+                              ),
+                            ),
+                          );
+                        }
+
+                        Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(
+                            builder: (context) => const MainScreen(),
+                          ),
+                          (route) => false,
+                        );
+                      }
+                    },
+                    child: Text(
+                      "Proceed",
+                      style: textTheme.headlineMedium!.copyWith(
+                        color: Colors.white,
                       ),
-                      (route) => false,
-                    );
-                  }
+                    ),
+                  );
                 },
-                child: Text(
-                  "Proceed",
-                  style: textTheme.headlineMedium!.copyWith(
-                    color: Colors.white,
-                  ),
-                ),
               ),
             ],
           ),
