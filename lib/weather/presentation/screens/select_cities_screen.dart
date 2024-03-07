@@ -15,22 +15,29 @@ class SelectCitiesScreen extends StatefulWidget {
 }
 
 class _SelectCitiesScreenState extends State<SelectCitiesScreen> {
-  final int _limit = 3;
+  final int _minimumCities = 3;
   final List<City> _selectedCities = [];
 
   @override
   void initState() {
     super.initState();
-    //Lagos selected by default
-    _selectedCities.add(cities[0]);
+
+    for (var city in cities) {
+      if (city.name == "Lagos") {
+        //Lagos selected by default
+        _selectedCities.add(city);
+
+        break;
+      }
+    }
   }
 
   int _getCitiesLeft() {
-    return _limit - _selectedCities.length;
+    return _minimumCities - _selectedCities.length;
   }
 
   bool _enableButton() {
-    return _selectedCities.length == _limit;
+    return _selectedCities.length >= _minimumCities;
   }
 
   @override
@@ -62,11 +69,21 @@ class _SelectCitiesScreenState extends State<SelectCitiesScreen> {
                           height: 8,
                         ),
                         Text(
-                          _selectedCities.length != _limit
-                              ? "Kindly select ${_getCitiesLeft()} more ${_getCitiesLeft() == 1 ? "city" : "cities"} to proceed"
+                          _selectedCities.length < _minimumCities
+                              ? "Kindly select at least ${_getCitiesLeft()} more ${_getCitiesLeft() == 1 ? "city" : "cities"} to proceed"
                               : _selectedCities.map((e) => e.name).join(", "),
                           style: textTheme.bodyLarge!.copyWith(
                             fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 4,
+                        ),
+                        Text(
+                          "Lagos is selected by default",
+                          style: textTheme.bodyMedium!.copyWith(
+                            fontWeight: FontWeight.w400,
+                            color: kNeutral900.withOpacity(0.6),
                           ),
                         ),
                         const SizedBox(
@@ -88,9 +105,7 @@ class _SelectCitiesScreenState extends State<SelectCitiesScreen> {
                                         _selectedCities.remove(city);
                                       }
                                     } else {
-                                      if (_selectedCities.length < _limit) {
-                                        _selectedCities.add(city);
-                                      }
+                                      _selectedCities.add(city);
                                     }
                                     setState(() {});
                                   },
