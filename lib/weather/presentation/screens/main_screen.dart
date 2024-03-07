@@ -43,17 +43,15 @@ class _MainScreenState extends ConsumerState<MainScreen> {
     }
   }
 
-  final _colors = [kBlueColor, kOrangeColor, kRedColor];
+  final _colors = [kPrimaryColor, kOrangeColor, kRedColor];
 
   List<CarouselItem> _getSliders() {
     return _selectedCities
         .mapIndexed(
           (index, city) => CarouselItem(
             index: index,
-            title: city.name,
-            degree: "34°",
-            description: "Mostly cloudy",
             bgColor: _colors[_determineSliderColorIndex(index)],
+            city: city,
           ),
         )
         .toList();
@@ -86,6 +84,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                   enableInfiniteScroll: false,
                   viewportFraction: 0.9,
                   padEnds: false,
+                  aspectRatio: 16 / 10,
                 ),
                 items: _sliders,
               ),
@@ -168,7 +167,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                               child: Text(
                                 isSelected ? "Unselect" : "Select",
                                 style: textTheme.bodySmall!.copyWith(
-                                  color: isSelected ? kNeutral900 : kBlueColor,
+                                  color: isSelected ? kNeutral900 : kPrimaryColor,
                                   decoration: TextDecoration.underline,
                                 ),
                               ),

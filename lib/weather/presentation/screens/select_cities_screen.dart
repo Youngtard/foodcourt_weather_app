@@ -104,9 +104,9 @@ class _SelectCitiesScreenState extends State<SelectCitiesScreen> {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(100),
                                       border: Border.all(
-                                        color: isSelected ? kBlueColor : kNeutral900.withOpacity(0.5),
+                                        color: isSelected ? kPrimaryColor : kNeutral900.withOpacity(0.5),
                                       ),
-                                      color: isSelected ? kBlueColor : Colors.white,
+                                      color: isSelected ? kPrimaryColor : Colors.white,
                                     ),
                                     padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
                                     child: Row(
@@ -152,7 +152,7 @@ class _SelectCitiesScreenState extends State<SelectCitiesScreen> {
                   return ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       minimumSize: const Size(double.infinity, 48),
-                      backgroundColor: _enableButton() ? kBlueColor : kBlueColor.withOpacity(0.6),
+                      backgroundColor: _enableButton() ? kPrimaryColor : kPrimaryColor.withOpacity(0.6),
                     ),
                     onPressed: () async {
                       if (_enableButton()) {
