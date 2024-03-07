@@ -12,6 +12,7 @@ import 'package:foodcourt_weather/weather/presentation/screens/components/carous
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 
+import '../../../utils/constants.dart';
 import '../../domain/models/weather_data.dart';
 
 class MainScreen extends ConsumerStatefulWidget {
@@ -67,7 +68,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
               final placeMark = placeMarks[0];
               setState(() {
                 _gottenCurrentLocation = true;
-                _currentLocation = "${placeMark.street ?? ""}, ${placeMark.locality ?? "N/A"}";
+                _currentLocation = "${placeMark.street ?? ""}, ${placeMark.locality ?? kNotAvailable}";
 
                 ref.read(currentLocationWeatherDataProvider.notifier).fetchData(
                       latitude: lat,
@@ -185,7 +186,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                       children: [
                         Expanded(
                           child: Text(
-                            _currentLocation ?? "N/A",
+                            _currentLocation ?? kNotAvailable,
                             style: textTheme.headlineLarge!.copyWith(
                               fontWeight: FontWeight.w400,
                             ),
@@ -203,7 +204,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        "${data.main?.temp ?? "N/A"}°",
+                                        "${data.main?.temp ?? kNotAvailable}°",
                                         style: textTheme.headlineLarge!.copyWith(
                                           fontSize: 48,
                                         ),
@@ -213,7 +214,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                                         style: textTheme.bodyLarge,
                                       ),
                                       Text(
-                                        "Feels like: ${data.main?.feelsLike ?? "N/A"}°",
+                                        "Feels like: ${data.main?.feelsLike ?? kNotAvailable}°",
                                         style: textTheme.bodyLarge,
                                       ),
                                     ],

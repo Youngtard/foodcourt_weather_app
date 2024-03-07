@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:foodcourt_weather/utils/constants.dart';
 import 'package:foodcourt_weather/weather/domain/models/weather_data.dart';
 import 'package:foodcourt_weather/weather/presentation/controllers/weather_data_controller.dart';
 
@@ -106,7 +107,7 @@ class _CarouselItemState extends ConsumerState<CarouselItem> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "${data.main?.temp ?? "N/A"}°",
+                          "${data.main?.temp ?? kNotAvailable}°",
                           style: textTheme.headlineLarge!.copyWith(
                             fontSize: 48,
                             color: Colors.white,
@@ -119,7 +120,7 @@ class _CarouselItemState extends ConsumerState<CarouselItem> {
                           ),
                         ),
                         Text(
-                          "Feels like: ${data.main?.feelsLike ?? "N/A"}°",
+                          "Feels like: ${data.main?.feelsLike ?? kNotAvailable}°",
                           style: textTheme.bodyLarge!.copyWith(
                             color: Colors.white,
                           ),
