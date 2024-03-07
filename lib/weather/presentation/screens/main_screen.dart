@@ -35,6 +35,8 @@ class _MainScreenState extends ConsumerState<MainScreen> {
 
   final _carouselColors = [kPrimaryColor, kOrangeColor, kRedColor];
 
+  String? _locationPermissionError;
+
   @override
   void initState() {
     super.initState();
@@ -48,12 +50,58 @@ class _MainScreenState extends ConsumerState<MainScreen> {
   }
 
   Future<void> _getUserCurrentLocation() async {
-    await Geolocator.requestPermission().then((value) {}).onError((error, stackTrace) async {
-      await Geolocator.requestPermission();
-      debugPrint("ERROR: $error");
-    });
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      setState(() {
+        _locationPermissionError = "Location services are disabled, kindly enable location services.";
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            _locationPermissionError!,
+          ),
+        ),
+      );
+      return;
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        setState(() {
+          _locationPermissionError = "Location permissions are denied, kindly allow location permissions.";
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              _locationPermissionError!,
+            ),
+          ),
+        );
+        return;
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      setState(() {
+        _locationPermissionError = "Location permissions are permanently denied, kindly allow location permissions.";
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            _locationPermissionError!,
+          ),
+        ),
+      );
+      return;
+    }
 
     setState(() {
+      _locationPermissionError = null;
       _gottenCurrentLocation = false;
     });
 
@@ -167,7 +215,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                   const SizedBox(
                     width: 8,
                   ),
-                  _gottenCurrentLocation
+                  _gottenCurrentLocation || _locationPermissionError != null
                       ? IconButton(
                           onPressed: () {
                             _getUserCurrentLocation();
@@ -180,64 +228,72 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                       : const SizedBox(),
                 ],
               ),
-              _gottenCurrentLocation
-                  ? Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            _currentLocation ?? kNotAvailable,
-                            style: textTheme.headlineLarge!.copyWith(
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 12,
-                        ),
-                        ref.watch(currentLocationWeatherDataProvider).when(
-                              data: (data) {
-                                if (data != null) {
-                                  final description = data.weather != null && data.weather!.isNotEmpty ? data.weather![0].description ?? "" : "";
-
-                                  return Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "${data.main?.temp ?? kNotAvailable}°",
-                                        style: textTheme.headlineLarge!.copyWith(
-                                          fontSize: 48,
-                                        ),
-                                      ),
-                                      Text(
-                                        description.capitalize(),
-                                        style: textTheme.bodyLarge,
-                                      ),
-                                      Text(
-                                        "Feels like: ${data.main?.feelsLike ?? kNotAvailable}°",
-                                        style: textTheme.bodyLarge,
-                                      ),
-                                    ],
-                                  );
-                                }
-
-                                return const SizedBox();
-                              },
-                              error: (e, s) => const SizedBox(),
-                              loading: () => const FittedBox(
-                                child: SpinKitPulse(
-                                  color: kNeutral900,
+              _locationPermissionError != null
+                  ? Text(
+                      _locationPermissionError!,
+                      style: textTheme.bodyMedium!.copyWith(
+                        fontWeight: FontWeight.w400,
+                        color: kNeutral900.withOpacity(0.6),
+                      ),
+                    )
+                  : _gottenCurrentLocation
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                _currentLocation ?? kNotAvailable,
+                                style: textTheme.headlineLarge!.copyWith(
+                                  fontWeight: FontWeight.w400,
                                 ),
                               ),
                             ),
-                      ],
-                    )
-                  : const Center(
-                      child: SpinKitWave(
-                        color: kGreyColor,
-                      ),
-                    ),
+                            const SizedBox(
+                              width: 12,
+                            ),
+                            ref.watch(currentLocationWeatherDataProvider).when(
+                                  data: (data) {
+                                    if (data != null) {
+                                      final description = data.weather != null && data.weather!.isNotEmpty ? data.weather![0].description ?? "" : "";
+
+                                      return Column(
+                                        crossAxisAlignment: CrossAxisAlignment.end,
+                                        children: [
+                                          Text(
+                                            "${data.main?.temp ?? kNotAvailable}°",
+                                            style: textTheme.headlineLarge!.copyWith(
+                                              fontSize: 48,
+                                            ),
+                                          ),
+                                          Text(
+                                            description.capitalize(),
+                                            style: textTheme.bodyLarge,
+                                          ),
+                                          Text(
+                                            "Feels like: ${data.main?.feelsLike ?? kNotAvailable}°",
+                                            style: textTheme.bodyLarge,
+                                          ),
+                                        ],
+                                      );
+                                    }
+
+                                    return const SizedBox();
+                                  },
+                                  error: (e, s) => const SizedBox(),
+                                  loading: () => const FittedBox(
+                                    child: SpinKitPulse(
+                                      color: kNeutral900,
+                                    ),
+                                  ),
+                                ),
+                          ],
+                        )
+                      : const Center(
+                          child: SpinKitWave(
+                            color: kGreyColor,
+                          ),
+                        ),
               const SizedBox(
                 height: 24,
               ),
