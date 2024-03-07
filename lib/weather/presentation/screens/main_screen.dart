@@ -98,6 +98,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
     return _selectedCities
         .mapIndexed(
           (index, city) => CarouselItem(
+            key: Key(city.toString()),
             index: index,
             bgColor: _carouselColors[_determineSliderColorIndex(index)],
             city: city,
@@ -270,7 +271,6 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                                 if (isSelected) {
                                   _selectedCities.remove(city);
                                   setState(() {});
-
                                 } else {
                                   _selectedCities.add(city);
                                 }
